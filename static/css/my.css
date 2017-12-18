@@ -1,0 +1,15 @@
+.game-image {
+  margin-top: 0px;
+  margin-left: 15px;
+  width: 100px;
+  height: 100px;
+}
+.game-name {
+  font-size: x-large;
+}
+
+.release-date {
+  font-size: large;
+  margin-left: 10px;
+  margin-top:10px;
+}
