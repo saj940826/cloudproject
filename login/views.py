@@ -8,8 +8,9 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 def game(request, num=1):
+    id = request.GET.get('id', 1)
     template = loader.get_template('login/game.html')
-    context = {}
+    context = {'id':id}
     return HttpResponse(template.render(context, request))
 
 # Create your views here.

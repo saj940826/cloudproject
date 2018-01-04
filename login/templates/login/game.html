@@ -5,102 +5,44 @@
 
 {% block content %}
 <div class="game" onload="loadList()">
-    <div class="container rounded" style="background-color:#EBE8E8;">
-        <div class="row">
-          <div class="col-2" style="margin-top:50px;padding-right:20px; border-right: 1px solid #757575;">
-            <div class="game-image">
-                <img src="{% static "images/nioh-2016jpg-9b2e3b_160h.jpg" %}" class="rounded" width="110px" height="110px" alt="Nion" />
-                <span class="game-name">
-                  <center font-size="5">Nion</center>
-                </span>
-                <br>
-                <span class="game-rating">
-                  <center font-size="4">IGN: 9.2</center>
-                  <center font-size="4">PC GAMER: 9.2</center>
-                </span>
-            </div>
-          </div>
-          <div class="col-8" style="margin-top:50px;padding-right:20px; border-right: 1px solid #757575;">
-            from django.urls import include, path
-            from apps.main import views as main_views
-            from credit import views as credit_views
-
-            extra_patterns = [
-                path('reports/', credit_views.report),
-                path('reports/<int:id>/', credit_views.report),
-                path('charge/', credit_views.charge),
-            ]
-
-            urlpatterns = [
-                path('', main_views.homepage),
-                path('help/', include('apps.help.urls')),
-                path('credit/', include(extra_patterns)),
-            ]
-            In this example, the /credit/reports/ URL will be handled by the credit_views.report() Django view.
-
-            This can be used to remove redundancy from URLconfs where a single pattern prefix is used repeatedly. For example, consider this URLconf:
-
-            from django.urls import path
-            from . import views
-
-            urlpatterns = [
-                path('<page_slug>-<page_id>/history/', views.history),
-                path('<page_slug>-<page_id>/edit/', views.edit),
-                path('<page_slug>-<page_id>/discuss/', views.discuss),
-                path('<page_slug>-<page_id>/permissions/', views.permissions),
-            ]
-            We can improve this by stating the common path prefix only once and grouping the suffixes that differ:
-
-            from django.urls import include, path
-            from . import views
-
-            urlpatterns = [
-                path('<page_slug>-<page_id>/', include([
-                    path('history/', views.history),
-                    path('edit/', views.edit),
-                    path('discuss/', views.discuss),
-                    path('permissions/', views.permissions),
-                ])),
-            ]
-            Captured parameters¶
-
-            An included URLconf receives any captured parameters from parent URLconfs, so the following example is valid:
-
-            # In settings/urls/main.py
-            from django.urls import include, path
-
-            urlpatterns = [
-                path('<username>/blog/', include('foo.urls.blog')),
-            ]
-
-            # In foo/urls/blog.py
-            from django.urls import path
-            from . import views
-
-            urlpatterns = [
-                path('', views.blog.index),
-                path('archive/', views.blog.archive),
-            ]
-            In the above example, the captured "username" variable is passed to the included URLconf, as expected.
-
-            Passing extra options to view functions¶
-
-            URLconfs have a hook that lets you pass extra arguments to your view functions, as a Python dictionary.
-
-            The path() function can take an optional third argument which should be a dictionary of extra keyword arguments to pass to the view function.
-
-            For example:
-
-            from django.urls import path
-            from . import views
-          </div>
-        </div>
-    </div>
 </div>
 
 {% endblock content %}
 
 {% block footer_javascript_section %}
 <script>
+function buttonEle(name){
+  return '<button type="button" class="btn btn-dark btn-sm" disabled>'+name+'</button>'
+};
+function appendElement(elementJSON){
+  var cate = '';
+  var adv = '';
+  var disadv = '';
+  elementJSON.category.forEach(function(categoryI){
+    cate = cate.concat(buttonEle(categoryI)+',');
+
+  });
+  cate = cate.substring(0, cate.length-1);
+  elementJSON.advantages.forEach(function(advantage){
+    adv = adv.concat('<p> &bull;' +advantage+' </p>');
+  });
+
+  elementJSON.disadvantages.forEach(function(disadvantage){
+    disadv = disadv.concat('<p> &bull;' +disadvantage+' </p>');
+  });
+  $('.game').append('<div class="container rounded" style="background-color:#EBE8E8;"><div class="row"><div class="col-2" style="margin-top:50px;padding-right:20px; border-right: 1px solid #757575;"><div class="game-image"><img src="'+elementJSON.cover_url+'" class="rounded" width="110px" height="110px" alt="'+elementJSON.name+'" /><span class="game-name"><center font-size="5">'+elementJSON.name+'</center></span><br><span class="score"><center font-size="4">Score:'+elementJSON.score+'</center></span><span class="price"><center font-size="4">Price:'+elementJSON.price+'</center></span></div></div><div class="col-8" style="margin-top:50px;padding-right:20px; border-right: 1px solid #757575;"><h4>Describe:</h4><p>'+elementJSON.description+'</p><div class="row"><div class="col-6" style="margin-top:20px;padding-right:20px; border-right: 1px solid #757575;"><h4>Advantages</h4>'+adv+'</div><div class="col-6" style="margin-top:20px;padding-right:20px;"><h4>Disadvantages</h4>'+disadv+'</div></div><div class="review">'+elementJSON.review+'</div><div class="category" style="margin-top:20px;"><h4>Category: '+cate+'</h4></div></div><div class="col-2" style="margin-top:50px;"><span class="release"><h5 font-size="4">Release At:</h5><p>3151</p></span><span class="publisher"><h5 font-size="4">Publisher:</h5><p>'+elementJSON.publisher+'</p></span><span class="developer"><h5 font-size="4">Developer:</h5><p>'+elementJSON.developer+'</p></span><span class="language"><h5 font-size="4">Language Number:</h5><p>'+elementJSON.language_number+'</p></span></div></div></div>');
+};
+
+function loadGame(){
+  $.ajax({
+    url:"http://129.213.39.231:8000/games/info/?gid={{id}}",
+    success: function(data){
+      appendElement(data.game);
+    },
+    method:"GET"
+  });
+};
+loadGame();
 </script>
+
 {% endblock footer_javascript_section %}
