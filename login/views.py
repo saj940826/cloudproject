@@ -7,4 +7,9 @@ def index(request):
     context = {}
     return HttpResponse(template.render(context, request))
 
+def game(request, num=1):
+    template = loader.get_template('login/game.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
+
 # Create your views here.
