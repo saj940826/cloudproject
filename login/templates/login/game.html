@@ -4,7 +4,7 @@
 {% block nav-style %}mkt-nav{% endblock nav-style %}
 
 {% block content %}
-<div class="game" onload="loadList()">
+<div class="list" onload="loadList()">
 </div>
 
 {% endblock content %}
@@ -30,7 +30,7 @@ function appendElement(elementJSON){
   elementJSON.disadvantages.forEach(function(disadvantage){
     disadv = disadv.concat('<p> &bull;' +disadvantage+' </p>');
   });
-  $('.game').append('<div class="container rounded" style="background-color:#EBE8E8;"><div class="row"><div class="col-2" style="margin-top:50px;padding-right:20px; border-right: 1px solid #757575;"><div class="game-image"><img src="'+elementJSON.cover_url+'" class="rounded" width="110px" height="110px" alt="'+elementJSON.name+'" /><span class="game-name"><center font-size="5">'+elementJSON.name+'</center></span><br><span class="score"><center font-size="4">Score:'+elementJSON.score+'</center></span><span class="price"><center font-size="4">Price:'+elementJSON.price+'</center></span></div></div><div class="col-8" style="margin-top:50px;padding-right:20px; border-right: 1px solid #757575;"><h4>Describe:</h4><p>'+elementJSON.description+'</p><div class="row"><div class="col-6" style="margin-top:20px;padding-right:20px; border-right: 1px solid #757575;"><h4>Advantages</h4>'+adv+'</div><div class="col-6" style="margin-top:20px;padding-right:20px;"><h4>Disadvantages</h4>'+disadv+'</div></div><div class="review">'+elementJSON.review+'</div><div class="category" style="margin-top:20px;"><h4>Category: '+cate+'</h4></div></div><div class="col-2" style="margin-top:50px;"><span class="release"><h5 font-size="4">Release At:</h5><p>3151</p></span><span class="publisher"><h5 font-size="4">Publisher:</h5><p>'+elementJSON.publisher+'</p></span><span class="developer"><h5 font-size="4">Developer:</h5><p>'+elementJSON.developer+'</p></span><span class="language"><h5 font-size="4">Language Number:</h5><p>'+elementJSON.language_number+'</p></span></div></div></div>');
+  $('.list').append('<div class="container rounded" style="background-color:#EBE8E8;"><div class="row"><div class="col-2" style="margin-top:50px;padding-right:20px; border-right: 1px solid #757575;"><div class="game-image"><img src="'+elementJSON.cover_url+'" class="rounded" width="110px" height="110px" alt="'+elementJSON.name+'" /><span class="game-name"><center font-size="5">'+elementJSON.name+'</center></span><br><span class="score"><center font-size="4">Score:'+elementJSON.score+'</center></span><span class="price"><center font-size="4">Price:'+elementJSON.price+'</center></span></div></div><div class="col-8" style="margin-top:50px;padding-right:20px; border-right: 1px solid #757575;"><h4>Describe:</h4><p>'+elementJSON.description+'</p><div class="row"><div class="col-6" style="margin-top:20px;padding-right:20px; border-right: 1px solid #757575;"><h4>Advantages</h4>'+adv+'</div><div class="col-6" style="margin-top:20px;padding-right:20px;"><h4>Disadvantages</h4>'+disadv+'</div></div><div class="review">'+elementJSON.review+'</div><div class="category" style="margin-top:20px;"><h4>Category: '+cate+'</h4></div></div><div class="col-2" style="margin-top:50px;"><span class="release"><h5 font-size="4">Release At:</h5><p>3151</p></span><span class="publisher"><h5 font-size="4">Publisher:</h5><p>'+elementJSON.publisher+'</p></span><span class="developer"><h5 font-size="4">Developer:</h5><p>'+elementJSON.developer+'</p></span><span class="language"><h5 font-size="4">Language Number:</h5><p>'+elementJSON.language_number+'</p></span></div></div></div>');
 };
 
 function loadGame(){
@@ -42,6 +42,28 @@ function loadGame(){
     method:"GET"
   });
 };
+
+function appendResult(elementJSON){
+  $('.list').append("<div class='card' style='background-color:#EBE8E8'><div class='card-body'><div class='row' style='height:200px'><div class='col-2' style='padding-right:20px; border-right: 1px solid #757575;'><div class='game-image'><img src='"+elementJSON.cover_url+"' %}' class='rounded' width='110px' height='110px' alt='"+elementJSON.name+"' /><span class='game-name' style='font-size:3'><center style='font-size:3'><a href='http://"+location.host+"/game?id="+elementJSON.id+"'>"+elementJSON.name+"</a></center></span></div></div><div class='col-2' style='padding-right:20px; border-right: 1px solid #757575;'><div class='Original Price'><h5>Original Price:<h5><p><font size='5'>GBP"+elementJSON.price+"</font></p></div></div><div class='col-5' style='padding-right:20px; border-right: 1px solid #757575;'><h4>Describe:</h4><p>"+elementJSON.description+"</p></div><div class='col-2'><h4>Rates:</h4><center><h1 style='margin-top:20px;margin-left:50px'>"+elementJSON.score+"</h1></center></div></div></div></div><br>");
+};
+
+function search(element){
+  $('.list').empty();
+  loaded = false;
+  keywords = $(element).parent().find("input")[0].value.replace(" ", "-");
+  $.ajax({
+    url:"http://129.213.39.231:8000/games/search/?key="+keywords+"&last_id=0",
+    success: function(data){
+      data.games.forEach(function(game){
+        appendResult(game);
+      });
+      loaded = true;
+    },
+    method:"GET"
+
+  })
+}
+
 loadGame();
 </script>
 

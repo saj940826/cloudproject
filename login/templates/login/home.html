@@ -19,7 +19,7 @@ var scrollLoad = false;
 var loaded = false;
 page = 0;
 function appendElement(elementJSON){
-  $('.list').append("<div class='card' style='background-color:#EBE8E8'><div class='card-body'><div class='row' style='height:200px'><div class='col-2' style='padding-right:20px; border-right: 1px solid #757575;'><div class='game-image'><img src='"+elementJSON.cover_url+"' %}' class='rounded' width='110px' height='110px' alt='"+elementJSON.name+"' /><span class='game-name'><center font-size='5'><a href='http://"+location.host+"/game?id="+elementJSON.id+"'>"+elementJSON.name+"</a></center></span></div></div><div class='col-2' style='padding-right:20px; border-right: 1px solid #757575;'><div class='Original Price'><h5>Original Price:<h5><p><font size='5'>GBP"+elementJSON.price+"</font></p><span class=‘game-date’><p font-size=‘5’ align=‘right’>Release at: 28 Jan, 2017</p></span></div></div><div class='col-5' style='padding-right:20px; border-right: 1px solid #757575;'><h4>Describe:</h4><p>"+elementJSON.description+"</p></div><div class='col-2'><h4>Rates:</h4><center><h1 style='margin-top:20px;margin-left:50px'>"+elementJSON.score+"</h1></center></div></div></div></div><br>");
+  $('.list').append("<div class='card' style='background-color:#EBE8E8'><div class='card-body'><div class='row' style='height:200px'><div class='col-2' style='padding-right:20px; border-right: 1px solid #757575;'><div class='game-image'><img src='"+elementJSON.cover_url+"' %}' class='rounded' width='110px' height='110px' alt='"+elementJSON.name+"' /></div><span class='game-name' style='width:120%;'><center font-size='4' style='margin-top:10px'><a href='http://"+location.host+"/game?id="+elementJSON.id+"'>"+elementJSON.name+"</a></center></span></div><div class='col-2' style='padding-right:20px; border-right: 1px solid #757575;'><div class='Original Price'><h5>Original Price:<h5><p><font size='5'>GBP"+elementJSON.price+"</font></p></div></div><div class='col-5' style='padding-right:20px; border-right: 1px solid #757575;'><h4>Describe:</h4><p>"+elementJSON.description+"</p></div><div class='col-2'><h4>Rates:</h4><center><h1 style='margin-top:20px;margin-left:50px'>"+elementJSON.score+"</h1></center></div></div></div></div><br>");
 };
 function loadList(){
   $.ajax({
@@ -46,6 +46,7 @@ function homeScroll(){
         success: function(data){
           data.games.forEach(function(game){
             appendElement(game);
+            $('.loading-icon > center').empty();
           });
           scrollLoad = false;
           page++;
@@ -62,10 +63,9 @@ window.addEventListener('scroll', homeScroll);
 //$(location).attr('hostname')
 function search(element){
   window.removeEventListener('scroll', homeScroll);
-  $('.list').innerHTML="";
+  $('.list').empty();
   loaded = false;
-  keywords = element.innerHTML.replace(" ", "-");
-  console.log(keywords);
+  keywords = $(element).parent().find("input")[0].value.replace(" ", "-");
   $.ajax({
     url:"http://129.213.39.231:8000/games/search/?key="+keywords+"&last_id=0",
     success: function(data){
