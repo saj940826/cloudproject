@@ -36,7 +36,7 @@ function loadList(){
 };
 
 function homeScroll(){
-  if($(window).scrollTop() + $(window).height() == $(document).height() && loaded==true ){
+  if($(window).scrollTop() + $(window).height() + 5 >= $(document).height() && loaded==true ){
     if(scrollLoad == false)
     {
       $('.loading-icon > center').prepend('<img src="{% static "images/Spinner.gif"%}" width="60px" height="60px"/>');
